@@ -76,8 +76,8 @@ jobs:
                   script: |
                       cd /home/sprintdevs
                       echo "Test VM......."
-                      sudo docker pull emmamichael/todolist:latest
-                      sudo docker run -p 9084:2000 -d emmamichael/todolist:latest
+                      sudo -n docker pull emmamichael/todolist:latest
+                      sudo -n docker run -p 9084:2000 -d emmamichael/todolist:latest
                       # cd maven
                       # git pull
                       # sudo -S systemctl restart docker
