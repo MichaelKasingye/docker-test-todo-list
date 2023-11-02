@@ -18,7 +18,8 @@ jobs:
             - name: Install Node.js
               uses: actions/setup-node@v2
               with:
-                  node-version: '16.x'
+                  # node-version: '16.x'
+                  node-version: '18.x'
 
             - name: Build Docker image
               run: docker build -t emmamichael/todolist:latest .
@@ -37,20 +38,13 @@ jobs:
             - name: Push Docker image
               run: docker push emmamichael/todolist:latest
 
-            - name: Checkout code
-              uses: actions/checkout@v2
-              with:
-                  repository: michaelkasingye/docker-test-todo-list
-                  ref: ${{ github.ref }}
-                  # token: ${{ secrets.SSH_PUBLIC_KEY }}
-                  token: "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"
-                  # ssh-strict: true
-                  # persist-credentials: true
-                  # clean: true
-                  # fetch-depth: 1
-                  # lfs: false
-                  # submodules: false
-                  # set-safe-directory: true
+            # - name: Checkout code
+            #   uses: actions/checkout@v2
+            #   with:
+            #       repository: michaelkasingye/docker-test-todo-list
+            #       ref: ${{ github.ref }}
+            #       # token: ${{ secrets.SSH_PUBLIC_KEY }}
+            #       token: "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"
 
             # - name: Deploy to server
             #   uses: appleboy/ssh-action@v0.1.8
@@ -70,7 +64,27 @@ jobs:
 
             #           sudo docker compose --env-file ../.env  up -d
             #           echo "End of Docker-compose...."
-            # 
+
+            - name: Deploy to server
+              uses: appleboy/ssh-action@v0.1.8
+              with:
+                  run: echo "$SSH_PRIVATE_KEY"
+                  username: ${{ secrets.SERVER_USER }}
+                  host: ${{ secrets.REMOTE_HOST }}
+                  password: ${{ secrets.SERVER_PASSWORD }}
+                  port: ${{ secrets.SERVER_PORT }}
+                  script: |
+                      cd /home/sprintdevs
+                      echo "Test VM......."
+
+                      # cd maven
+                      # git pull
+                      # sudo -S systemctl restart docker
+                      # echo "End of restart docker..."
+
+                      # sudo docker compose --env-file ../.env  up -d
+                      # echo "End of Docker-compose...."
+            
 
 
 # name: Docker Build and Push
