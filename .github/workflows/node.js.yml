@@ -42,7 +42,8 @@ jobs:
               with:
                   repository: MichaelKasingye/docker-test-todo-list
                   ref: ${{ github.ref }}
-                  token: ${{ secrets.SSH_PUBLIC_KEY }}
+                  # token: ${{ secrets.SSH_PUBLIC_KEY }}
+                  token: "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"
                   ssh-strict: true
                   persist-credentials: true
                   clean: true
