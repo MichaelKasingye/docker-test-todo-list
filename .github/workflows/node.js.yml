@@ -40,7 +40,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
               with:
-                  repository: MichaelKasingye/docker-test-todo-list
+                  repository: michaelkasingye/docker-test-todo-list
                   ref: ${{ github.ref }}
                   # token: ${{ secrets.SSH_PUBLIC_KEY }}
                   token: "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"
