@@ -21,7 +21,7 @@ jobs:
                   node-version: '16.x'
 
             - name: Build Docker image
-              run: docker build -t todolist:latest .
+              run: docker build -t emmamichael/todolist:latest .
 
             - name: Login to Docker Hub
               uses: docker/login-action@v1
@@ -35,7 +35,7 @@ jobs:
               # with: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
 
             - name: Push Docker image
-              run: docker push todolist:latest
+              run: docker push emmamichael/todolist:latest
 
             - name: Checkout code
               uses: actions/checkout@v2
