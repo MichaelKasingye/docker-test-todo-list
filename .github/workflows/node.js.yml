@@ -11,24 +11,6 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
-
-        env:
-            CACHE_RESTORE_KEYS: Linux-node-
-            NODE_ENV: ${{ secrets.NODE_ENV }}
-            DB_PORT: ${{ secrets.DB_PORT }}
-            DB_USERNAME: ${{ secrets.DB_USERNAME }}
-            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-            DB_DATABASE: ${{ secrets.DB_DATABASE }}
-            RATE_LIMIT: ${{ secrets.RATE_LIMIT }}
-            RATE_LIMIT_WINDOW: ${{ secrets.RATE_LIMIT_WINDOW }}
-            JWT_TOKEN_EXPIRATION: ${{ secrets.JWT_TOKEN_EXPIRATION }}
-            JWT_TOKEN_SECRET: ${{ secrets.JWT_TOKEN_SECRET }}
-            REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
-            JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
-            SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-            EMAIL_NOTIFICATION_PASSWORD: ${{ secrets.EMAIL_NOTIFICATION_PASSWORD }}
-            USER_CREATED_EMAIL_NOTIFICATION_DURATION: ${{ secrets.USER_CREATED_EMAIL_NOTIFICATION_DURATION }}
-
         steps:
             - name: Checkout repository
               uses: actions/checkout@v2
@@ -39,7 +21,7 @@ jobs:
                   node-version: '16.x'
 
             - name: Build Docker image
-              run: docker build -t pmsystem/maven:latest .
+              run: docker build -t todolist/test:latest .
 
             - name: Login to Docker Hub
               uses: docker/login-action@v1
@@ -48,12 +30,12 @@ jobs:
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
             - name: Push Docker image
-              run: docker push pmsystem/maven:latest
+              run: docker push todolist/test:latest
 
             - name: Checkout code
               uses: actions/checkout@v2
               with:
-                  repository: sprintug/maven
+                  repository: MichaelKasingye/docker-test-todo-list
                   ref: ${{ github.ref }}
                   token: ${{ secrets.SSH_PUBLIC_KEY }}
 
