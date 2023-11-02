@@ -43,6 +43,13 @@ jobs:
                   repository: MichaelKasingye/docker-test-todo-list
                   ref: ${{ github.ref }}
                   token: ${{ secrets.SSH_PUBLIC_KEY }}
+                  ssh-strict: true
+                  persist-credentials: true
+                  clean: true
+                  fetch-depth: 1
+                  lfs: false
+                  submodules: false
+                  set-safe-directory: true
 
             # - name: Deploy to server
             #   uses: appleboy/ssh-action@v0.1.8
