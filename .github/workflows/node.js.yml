@@ -44,13 +44,13 @@ jobs:
                   ref: ${{ github.ref }}
                   # token: ${{ secrets.SSH_PUBLIC_KEY }}
                   token: "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"
-                  ssh-strict: true
-                  persist-credentials: true
-                  clean: true
-                  fetch-depth: 1
-                  lfs: false
-                  submodules: false
-                  set-safe-directory: true
+                  # ssh-strict: true
+                  # persist-credentials: true
+                  # clean: true
+                  # fetch-depth: 1
+                  # lfs: false
+                  # submodules: false
+                  # set-safe-directory: true
 
             # - name: Deploy to server
             #   uses: appleboy/ssh-action@v0.1.8
