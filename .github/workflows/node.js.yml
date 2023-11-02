@@ -1,0 +1,77 @@
+name: Deploy to Ubuntu Server
+
+on:
+    pull_request:
+        types: [closed]
+        branches:
+            - develop
+    # push:
+    #   branches: ["main"]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        env:
+            CACHE_RESTORE_KEYS: Linux-node-
+            NODE_ENV: ${{ secrets.NODE_ENV }}
+            DB_PORT: ${{ secrets.DB_PORT }}
+            DB_USERNAME: ${{ secrets.DB_USERNAME }}
+            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            DB_DATABASE: ${{ secrets.DB_DATABASE }}
+            RATE_LIMIT: ${{ secrets.RATE_LIMIT }}
+            RATE_LIMIT_WINDOW: ${{ secrets.RATE_LIMIT_WINDOW }}
+            JWT_TOKEN_EXPIRATION: ${{ secrets.JWT_TOKEN_EXPIRATION }}
+            JWT_TOKEN_SECRET: ${{ secrets.JWT_TOKEN_SECRET }}
+            REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+            JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
+            SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+            EMAIL_NOTIFICATION_PASSWORD: ${{ secrets.EMAIL_NOTIFICATION_PASSWORD }}
+            USER_CREATED_EMAIL_NOTIFICATION_DURATION: ${{ secrets.USER_CREATED_EMAIL_NOTIFICATION_DURATION }}
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Install Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: '16.x'
+
+            - name: Build Docker image
+              run: docker build -t pmsystem/maven:latest .
+
+            - name: Login to Docker Hub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+
+            - name: Push Docker image
+              run: docker push pmsystem/maven:latest
+
+            - name: Checkout code
+              uses: actions/checkout@v2
+              with:
+                  repository: sprintug/maven
+                  ref: ${{ github.ref }}
+                  token: ${{ secrets.SSH_PUBLIC_KEY }}
+
+            # - name: Deploy to server
+            #   uses: appleboy/ssh-action@v0.1.8
+            #   with:
+            #       run: echo "$SSH_PRIVATE_KEY"
+            #       username: ${{ secrets.SERVER_USER }}
+            #       host: ${{ secrets.REMOTE_HOST }}
+            #       password: ${{ secrets.SERVER_PASSWORD }}
+            #       port: ${{ secrets.SERVER_PORT }}
+            #       key: ${{ secrets.SSH_PUBLIC_KEY }}
+            #       script: |
+            #           cd /home/sprintdevs
+            #           cd maven
+            #           git pull
+            #           sudo -S systemctl restart docker
+            #           echo "End of restart docker..."
+
+            #           sudo docker compose --env-file ../.env  up -d
+            #           echo "End of Docker-compose...."
