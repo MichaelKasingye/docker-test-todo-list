@@ -1,16 +1,26 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import todoRouter from './routes/todo';
-const app = express();
-const port = process.env.PORT || 2000;
+import dotenv from 'dotenv';
 
-app.use(bodyParser.json());
-app.use('/todos', todoRouter);
+import { dataSource } from './data-source';
+import { app } from './app';
+import { Logger } from '../logger';
 
-app.get('/', (req, res) => {
-  res.send('Hello, Express Todo List!');
-});
+dotenv.config();
+dataSource
+    .initialize()
+    .then(async () => {
+        Logger.info('Database connection initialized.');
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+        const port = process.env.PORT || 9000;
+
+        // Start the cron job
+        // startCronJob();
+
+        // Start the Server
+        app.listen(port, () => {
+            Logger.info(`Environment set to "${process.env.NODE_ENV}".`);
+            Logger.info(`Server running on http://localhost:${port}.`);
+        });
+    })
+    .catch((error) => {
+        Logger.error('Error during Data Source initialization', error);
+    });
