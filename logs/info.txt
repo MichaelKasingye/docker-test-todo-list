@@ -1,0 +1,3 @@
+[INFO] 4:58:25 PM Database connection initialized.
+[INFO] 4:58:25 PM Environment set to "development".
+[INFO] 4:58:25 PM Server running on http://localhost:9000.
