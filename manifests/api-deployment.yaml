@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maven-backend
+  labels:
+    name: maven-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maven-backend
+  template:
+    metadata:
+      labels:
+        app: maven-backend
+    spec:
+      containers:
+      - name: maven-backend
+        image: emmamichael/todolist:latest
+        env:
+        - name: NODE_ENV
+          value: "development"
+        - name: PORT
+          value: "9000"
+        - name: DB_DATABASE
+          value: "postgres"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_HOST
+          value: "postgres"
+        - name: RESEND
+          valueFrom:
+            secretKeyRef:
+              name: resend-credentials
+              key: resend
+        - name: RESEND_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: resend-credentials
+              key: resendApiKey 
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: password
+        - name: JWT_TOKEN_EXPIRATION
+          valueFrom:
+            secretKeyRef:
+              name: jwt-credentials
+              key: jwtTokenExpiration
+        - name: JWT_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-credentials
+              key: jwtTokenSecret    
+        - name: REFRESH_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-credentials
+              key: refreshTokenSecret
+        - name: JWT_REFRESH_TOKEN_EXPIRATION
+          valueFrom:
+            secretKeyRef:
+              name: jwt-credentials
+              key: jwtRefreshTokenExpiration               
+      restartPolicy: Always

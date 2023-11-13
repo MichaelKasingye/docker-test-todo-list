@@ -1,116 +1,177 @@
-name: Deploy to Ubuntu Server
+# name: Deploy to Ubuntu Server
 
-on:
-    pull_request:
-        types: [closed]
-        branches:
-            - develop
-    # push:
-    #   branches: ["main"]
+# on:
+#     pull_request:
+#         types: [closed]
+#         branches:
+#             - develop
+#     # push:
+#     #   branches: ["main"]
 
-jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v2
+# jobs:
+#     deploy:
+#         runs-on: ubuntu-latest
+#         steps:
+#             - name: Checkout repository
+#               uses: actions/checkout@v2
 
-            - name: Install Node.js
-              uses: actions/setup-node@v2
-              with:
-                  # node-version: '16.x'
-                  node-version: '18.x'
+#             - name: Install Node.js
+#               uses: actions/setup-node@v2
+#               with:
+#                   # node-version: '16.x'
+#                   node-version: '18.x'
 
-            - name: Build Docker image
-              run: docker build -t emmamichael/todolist:latest .
+#             - name: Build Docker image
+#               run: docker build -t emmamichael/todolist:latest .
 
-            - name: Login to Docker Hub
-              uses: docker/login-action@v1
-              with:
-                  username: ${{ secrets.DOCKER_USERNAME }}
-                  password: ${{ secrets.DOCKER_PASSWORD }}
-                  registry: docker.io  # Specify the registry here
+#             - name: Login to Docker Hub
+#               uses: docker/login-action@v1
+#               with:
+#                   username: ${{ secrets.DOCKER_USERNAME }}
+#                   password: ${{ secrets.DOCKER_PASSWORD }}
+#                   registry: docker.io  # Specify the registry here
 
-            # - name: Login to Docker
-              # run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
-              # with: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
+#             # - name: Login to Docker
+#               # run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
+#               # with: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
 
-            - name: Push Docker image
-              run: docker push emmamichael/todolist:latest
+#             - name: Push Docker image
+#               run: docker push emmamichael/todolist:latest
 
-            # - name: Checkout code
-            #   uses: actions/checkout@v2
-            #   with:
-            #       repository: michaelkasingye/docker-test-todo-list
-            #       ref: ${{ github.ref }}
-            #       # token: ${{ secrets.SSH_PUBLIC_KEY }}
-            #       token: "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"
+#             # - name: Checkout code
+#             #   uses: actions/checkout@v2
+#             #   with:
+#             #       repository: michaelkasingye/docker-test-todo-list
+#             #       ref: ${{ github.ref }}
+#             #       # token: ${{ secrets.SSH_PUBLIC_KEY }}
+#             #       token: "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"
 
-            # - name: Deploy to server
-            #   uses: appleboy/ssh-action@v0.1.8
-            #   with:
-            #       run: echo "$SSH_PRIVATE_KEY"
-            #       username: ${{ secrets.SERVER_USER }}
-            #       host: ${{ secrets.REMOTE_HOST }}
-            #       password: ${{ secrets.SERVER_PASSWORD }}
-            #       port: ${{ secrets.SERVER_PORT }}
-            #       key: ${{ secrets.SSH_PUBLIC_KEY }}
-            #       script: |
-            #           cd /home/sprintdevs
-            #           cd maven
-            #           git pull
-            #           sudo -S systemctl restart docker
-            #           echo "End of restart docker..."
+#             # - name: Deploy to server
+#             #   uses: appleboy/ssh-action@v0.1.8
+#             #   with:
+#             #       run: echo "$SSH_PRIVATE_KEY"
+#             #       username: ${{ secrets.SERVER_USER }}
+#             #       host: ${{ secrets.REMOTE_HOST }}
+#             #       password: ${{ secrets.SERVER_PASSWORD }}
+#             #       port: ${{ secrets.SERVER_PORT }}
+#             #       key: ${{ secrets.SSH_PUBLIC_KEY }}
+#             #       script: |
+#             #           cd /home/sprintdevs
+#             #           cd maven
+#             #           git pull
+#             #           sudo -S systemctl restart docker
+#             #           echo "End of restart docker..."
 
-            #           sudo docker compose --env-file ../.env  up -d
-            #           echo "End of Docker-compose...."
+#             #           sudo docker compose --env-file ../.env  up -d
+#             #           echo "End of Docker-compose...."
 
-            - name: Deploy to server
-              uses: appleboy/ssh-action@v0.1.8
-              with:
-                  run: echo "$SSH_PRIVATE_KEY"
-                  username: ${{ secrets.SERVER_USER }}
-                  host: ${{ secrets.REMOTE_HOST }}
-                  password: ${{ secrets.SERVER_PASSWORD }}
-                  port: ${{ secrets.SERVER_PORT }}
-                  script: |
-                      cd /home/sprintdevs
-                      echo "Test VM......."
-                      sudo -n docker pull emmamichael/todolist:latest
-                      sudo -n docker run -p 9000:2000 -d emmamichael/todolist:latest
-                      # cd maven
-                      # git pull
-                      # sudo -S systemctl restart docker
-                      # echo "End of restart docker..."
+#             - name: Deploy to server
+#               uses: appleboy/ssh-action@v0.1.8
+#               with:
+#                   run: echo "$SSH_PRIVATE_KEY"
+#                   username: ${{ secrets.SERVER_USER }}
+#                   host: ${{ secrets.REMOTE_HOST }}
+#                   password: ${{ secrets.SERVER_PASSWORD }}
+#                   port: ${{ secrets.SERVER_PORT }}
+#                   script: |
+#                       cd /home/sprintdevs
+#                       echo "Test VM......."
+#                       sudo -n docker pull emmamichael/todolist:latest
+#                       sudo -n docker run -p 9000:2000 -d emmamichael/todolist:latest
+#                       # cd maven
+#                       # git pull
+#                       # sudo -S systemctl restart docker
+#                       # echo "End of restart docker..."
 
-                      # sudo docker compose --env-file ../.env  up -d
-                      # echo "End of Docker-compose...."
+#                       # sudo docker compose --env-file ../.env  up -d
+
             
 
 
-# name: Docker Build and Push
+# # name: Docker Build and Push
 
-# on:
-#   push:
-#     branches:
-#       - develop
+# # on:
+# #   push:
+# #     branches:
+# #       - develop
 
-# jobs:
-#   build-and-push:
-#     runs-on: ubuntu-latest
+# # jobs:
+# #   build-and-push:
+# #     runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
+# #     steps:
+# #       - name: Checkout code
+# #         uses: actions/checkout@v2
 
-#       - name: Login to Docker
-#         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
+# #       - name: Login to Docker
+# #         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
 
-#       - name: Build Docker image
-#         run: docker build -t your-docker-username/your-image-name:latest .
+# #       - name: Build Docker image
+# #         run: docker build -t your-docker-username/your-image-name:latest .
 
-#       - name: Push Docker image to Docker Hub
-#         run: docker push your-docker-username/your-image-name:latest
+# #       - name: Push Docker image to Docker Hub
+# #         run: docker push your-docker-username/your-image-name:latest
 
-#       # - name: Clean up
-#       #   run: docker logout
+# #       # - name: Clean up
+# #       #   run: docker logout
+
+
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    # - name: Login to Docker Hub
+    #   run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    # - name: Build and push Docker image
+    #   run: |
+    #     IMAGE_NAME="emmamichael/todolist"
+    #     COMMIT_ID=$(git rev-parse --short HEAD)
+    #     docker buildx create --use
+    #     docker buildx build \
+    #       --platform linux/amd64,linux/arm64 \
+    #       -t $IMAGE_NAME:$COMMIT_ID \
+    #       --push .
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: emmamichael/todolist:latest
+        cache-from: type=registry,ref=emmamichael/todolist:latest
+        cache-to: type=registry,ref=emmamichael/todolist:latest,mode=max
+
+    # Log into Dev VM
+    - name: Log into VM
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        host: ${{ secrets.SERVER_HOST }}
+        port: ${{ secrets.SERVER_PORT }}
+        script: |
+          echo "Current folder: $(pwd)"
+          microk8s.kubectl get deployments
+
+          microk8s.kubectl kustomize edit set image emmamichael/todolist:latest:$COMMIT_ID
+
+          microk8s.kubectl kustomize .
